@@ -36,7 +36,7 @@
                                     rows="4"
                                     clearable
                                     prepend-icon="mdi-comment-text-outline"
-                                    :counter="2900"
+                                    :counter="6000"
                                     @change="$v.content.$touch()"
                                     @blur="$v.content.$touch()"
                                 ></v-textarea>
@@ -98,7 +98,7 @@ export default {
   mixins: [validationMixin],
   validations: {
     title: { required, maxLength: maxLength(25) },
-    content: { required, maxLength: maxLength(2900) },
+    content: { required, maxLength: maxLength(6000) },
     select: { required },
   },
   data() {
@@ -114,7 +114,7 @@ export default {
     contentRules() {
       const errors = [];
       if (!this.$v.content.$dirty) return errors;
-      if (!this.$v.content.maxLength) errors.push('Article must be at most 500 characters long');
+      if (!this.$v.content.maxLength) errors.push('Article must be at most 6000 characters long');
       if (!this.$v.content.required) errors.push('Article is required.');
       return errors;
     },
