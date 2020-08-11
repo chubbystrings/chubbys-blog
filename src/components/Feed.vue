@@ -30,7 +30,7 @@
         class="text-center primary--text subheading"
         cols="6"
       >
-        PAGE {{ page }} OF {{ pages }}
+        PAGE {{ page }} OF {{ pages  }}
       </v-col>
 
       <v-col
@@ -71,7 +71,9 @@ export default {
   computed: {
     ...mapState(['articles', 'searchedArticles']),
     pages() {
-      return Math.ceil(this.articles ? this.articles.length / 12 : 1);
+      return Math.ceil(
+        this.articles && this.articles.length > 0 ? this.articles.length / 12 : 1,
+      );
     },
     paginatedArticles() {
       if (this.searchedArticles) {

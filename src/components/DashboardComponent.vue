@@ -7,7 +7,7 @@
             elevation="10"
             >
                 <v-card-title>
-                    <span class="headline text-center">Edit Article</span>
+                    <span class="headline text-center">Create Article</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
