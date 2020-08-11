@@ -34,11 +34,11 @@
           label="Search blog"
           rounded
           dense
-          v-if="!loginRoute"
+          v-if="homeRoute"
           @input="search"
         />
         <v-btn
-        v-else
+        v-if="loginRoute"
         text
         to="/"
         >
@@ -81,6 +81,10 @@ export default {
     },
     loginRoute() {
       return this.$route.name === 'Login';
+    },
+
+    homeRoute() {
+      return this.$route.name === 'Home';
     },
   },
 

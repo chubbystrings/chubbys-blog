@@ -7,12 +7,13 @@
   leave-active-class="animated fadeOut"
   >
   <v-row >
-    <v-col cols="12" class="ma-auto">
+    <v-col cols="12" class="ma-auto" md="9" sm="12">
       <v-card
+      rounded
         style="width: 95vw"
         class="mx-auto"
         outlined
-        color="transparent"
+        color="white"
         elevation="5"
         :loading="!loadArticle"
       >
