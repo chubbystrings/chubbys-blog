@@ -40,15 +40,15 @@ export default {
   data: () => ({
     items: [
       {
-        href: '#!',
+        href: 'https://twitter.com/chubby_code',
         icon: 'mdi-twitter',
       },
       {
-        href: '#!',
-        icon: 'mdi-instagram',
+        href: 'https://linkedin.com/in/emekaokwor',
+        icon: 'mdi-linkedin',
       },
       {
-        href: '#!',
+        href: 'https://facebook.com/chubbystrings',
         icon: 'mdi-facebook',
       },
     ],

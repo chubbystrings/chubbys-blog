@@ -22,7 +22,7 @@
 
         <div>
           <div class="subheading">
-            {{article.title}}
+            {{article.title ? article.title : '' }}
           </div>
 
           <div class="caption">
@@ -49,6 +49,13 @@ export default {
     ...mapState(['articles']),
   },
 
+  methods: {
+    newestPost() {
+      this.articlesPage = [this.articles[0], this.articles[1], this.articles[2]];
+      this.articlesPage = this.articlesPage.filter((item) => item);
+    },
+  },
+
   filters: {
     formatDate(date) {
       // eslint-disable-next-line no-underscore-dangle
@@ -57,9 +64,18 @@ export default {
     },
   },
 
+  created() {
+    this.newestPost();
+  },
+
   watch: {
     articles(val) {
       this.articlesPage = [val[0], val[1], val[2]];
+      this.articlesPage = this.articlesPage.filter((item) => item);
+    },
+
+    $route() {
+      this.newestPost();
     },
   },
 

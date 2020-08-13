@@ -21,6 +21,7 @@
       color="primary"
       :elevation="hover ? 10 : 2"
       style="height: 10rem;"
+      prominent
     >
     <small class="cat-position ml-2">{{value.category}}</small>
     <base-subheading>{{ value.title}}</base-subheading>

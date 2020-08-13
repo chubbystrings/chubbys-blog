@@ -5,7 +5,7 @@
     id="about"
     tag="section"
   >
-  <v-divider class="accent--text"></v-divider>
+  <v-divider class=""></v-divider>
   <v-avatar class="mt-1">
     <v-img
       :src="require('@/assets/logo.png')"
@@ -30,6 +30,6 @@ export default {
 </script>
 <style>
 .theme--light.v-divider {
-    border-color: #BA68C8 !important;
+    border-color: #607D8B !important;
 }
 </style>

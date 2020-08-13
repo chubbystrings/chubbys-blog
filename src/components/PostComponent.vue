@@ -9,15 +9,14 @@
   <v-row >
     <v-col cols="12" class="ma-auto" md="9" sm="12">
       <v-card
-      rounded
-        style="width: 95vw"
+        rounded
+        style="width: 95vw; height: 100vh; overflow: auto"
         class="mx-auto"
         outlined
-        color="white"
-        elevation="5"
+        color="transparent"
         :loading="!loadArticle"
       >
-        <v-list-item>
+        <v-list-item class="">
           <v-list-item-avatar color="grey"></v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -27,8 +26,8 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-card-text class="subheader pa-8">
-          {{ article.content }}
+        <v-card-text class="text-subtitle-1 text-justify">
+          {{ formatContent }}
         </v-card-text>
       </v-card>
     </v-col>
@@ -50,6 +49,17 @@ export default {
     ...mapState(['article', 'articles']),
     loadArticle() {
       return this.article.title !== '';
+    },
+
+    formatContent() {
+      if (this.article.content) {
+        const newArr = this.article.content.split(' ');
+        const firstWord = newArr[0].toUpperCase();
+        newArr.shift();
+        newArr.unshift(firstWord);
+        return newArr.join(' ');
+      }
+      return '';
     },
   },
   methods: {

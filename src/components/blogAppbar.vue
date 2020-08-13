@@ -24,6 +24,12 @@
           <v-icon>mdi-arrow-left</v-icon>
         </base-btn>
         <v-spacer />
+        <transition
+        appear
+        mode="out-in"
+        enter-active-class="animated fadeInLeftBig"
+        leave-active-class="animated fadeOut"
+        >
         <v-text-field
         v-model="searchWord"
           append-icon="mdi-magnify"
@@ -37,6 +43,7 @@
           v-if="homeRoute"
           @input="search"
         />
+        </transition>
         <v-btn
         v-if="loginRoute"
         text
@@ -99,3 +106,6 @@ export default {
   },
 };
 </script>
+<style>
+@import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css";
+</style>

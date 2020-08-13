@@ -4,7 +4,7 @@
     tag="section"
   >
     <base-card
-      color="#E1BEE7"
+      color="secondary"
       class="pa-3"
     >
       <v-container>

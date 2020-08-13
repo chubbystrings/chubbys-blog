@@ -5,7 +5,12 @@
      v-bind="$attrs"
     v-on="$listeners"
     >
-      <v-progress-circular indeterminate size="64">please wait..</v-progress-circular>
+       <v-progress-circular
+      color="primary"
+      indeterminate
+      :size="70"
+      :width="7"
+    ></v-progress-circular>
     </v-overlay>
   </div>
 </template>
