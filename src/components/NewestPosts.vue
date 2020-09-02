@@ -51,7 +51,8 @@ export default {
 
   methods: {
     newestPost() {
-      this.articlesPage = [this.articles[0], this.articles[1], this.articles[2]];
+      this.articlesPage = this.articles
+        ? [this.articles[0], this.articles[1], this.articles[2]] : [];
       this.articlesPage = this.articlesPage.filter((item) => item);
     },
   },

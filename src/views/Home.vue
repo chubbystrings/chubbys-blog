@@ -24,7 +24,6 @@ export default {
   },
 
   created() {
-    console.log('YESSSSSSSSSS');
     this.$store.dispatch('getArticles');
   },
 
