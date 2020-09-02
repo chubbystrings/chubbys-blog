@@ -5,6 +5,7 @@
         <v-col cols="4">
             <v-card
             elevation="10"
+            style="height: 80vh;"
             >
                 <v-card-title>
                     <span class="headline text-center">Create Article</span>
@@ -19,7 +20,6 @@
                                 :counter="25"
                                 :error-messages="titleRules"
                                 label="Title"
-                                prepend-icon="mdi-pencil"
                                 required
                                 @change="$v.title.$touch()"
                                 @blur="$v.title.$touch()"
@@ -27,21 +27,6 @@
                                 </v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-textarea
-                                dense
-                                    v-model="content"
-                                    :error-messages="contentRules"
-                                    class="mx-2"
-                                    label="Article"
-                                    rows="4"
-                                    clearable
-                                    prepend-icon="mdi-comment-text-outline"
-                                    :counter="6000"
-                                    @change="$v.content.$touch()"
-                                    @blur="$v.content.$touch()"
-                                ></v-textarea>
-                            </v-col>
-                            <v-col>
                                 <v-select
                                 dense
                                     v-model="select"
@@ -59,26 +44,36 @@
                     <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="primary"
+                    block
                     :disabled="$v.$anyError || !content || !title || !select"
-                    text @click="submit">Post</v-btn>
+                    @click="submit">Post Article</v-btn>
                     </v-card-actions>
                 </v-card>
 
             </v-col>
             <v-col cols="8">
                 <v-card
-                style="overflow-y: auto !important"
-                class="fill-height fullWidth"
+                style="height: 80vh;"
                 elevation="10"
                 s
                 >
                     <v-container>
                       <v-row>
                         <v-col cols="12">
-                          <v-card-title>{{title.toUpperCase()}}</v-card-title>
-                        </v-col>
-                        <v-col cols="12">
-                          <v-card-text>{{content}}</v-card-text>
+                         <v-textarea
+                            dense
+                            v-model="content"
+                            :error-messages="contentRules"
+                            class="mx-2"
+                            label="Type Article Here"
+                            rows="16"
+                            clearable
+                            full-width
+                            prepend-icon="mdi-comment-text-outline"
+                            :counter="6000"
+                            @change="$v.content.$touch()"
+                            @blur="$v.content.$touch()"
+                        ></v-textarea>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -107,6 +102,7 @@ export default {
       title: '',
       select: '',
       items: ['Leisure', 'Tech', 'Entertaiment'],
+      fullWidth: true,
     };
   },
   computed: {
