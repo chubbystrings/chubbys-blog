@@ -23,6 +23,14 @@
         >
           <v-icon>mdi-arrow-left</v-icon>
         </base-btn>
+         <v-btn
+        v-if="isAuth"
+        text
+        small
+        to="/cms/dashboard"
+        >
+        admin
+        </v-btn>
         <v-spacer />
         <transition
         appear
@@ -92,6 +100,10 @@ export default {
 
     homeRoute() {
       return this.$route.name === 'Home';
+    },
+
+    isAuth() {
+      return this.$store.getters.isAuthenticated && !this.$route.path.includes('cms');
     },
   },
 

@@ -8,6 +8,8 @@
   >
     <v-app-bar-nav-icon
       class="hidden-md-and-up"
+      @click="bar"
+      v-click-outside="outside"
     />
 
     <v-container class="mx-auto py-0">
@@ -63,7 +65,6 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'CoreAppBar',
-
   data: () => ({
     items: [
       {
@@ -99,6 +100,15 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout');
+    },
+    bar() {
+      this.$store.commit('TOGGLE_DRAWER');
+    },
+
+    outside() {
+      if (this.$store.getters.getDrawer) {
+        this.$store.commit('TOGGLE_DRAWER');
+      }
     },
   },
 };

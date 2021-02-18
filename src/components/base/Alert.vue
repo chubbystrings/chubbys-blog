@@ -1,20 +1,20 @@
 <template>
-    <div class="text-center successBar"  v-if="alerts.alert">
-    <transition
-    enter-active-class="animated fadeIn"
-    leave-active-class="animated fadeOut"
-    >
-    <v-snackbar
-      v-model="snackbar"
-      :multi-line="multiLine"
-      :color="alerts.type"
-      :timeout="timeout"
-      top
-    >
-      {{ alerts.message }}
-    </v-snackbar>
+    <div class="text-center successBar"  v-if="alerts.alert && adminRoutes">
+      <transition
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+      >
+      <v-snackbar
+        v-model="snackbar"
+        :multi-line="multiLine"
+        :color="alerts.type"
+        :timeout="timeout"
+        top
+      >
+        {{ alerts.message }}
+      </v-snackbar>
       </transition>
-  </div>
+    </div>
 </template>
 <script>
 import { mapState } from 'vuex';
@@ -29,6 +29,9 @@ export default {
 
   computed: {
     ...mapState(['alerts']),
+    adminRoutes() {
+      return this.$route.path.includes('cms');
+    },
   },
 };
 </script>

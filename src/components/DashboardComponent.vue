@@ -2,7 +2,7 @@
     <v-container>
         <v-row
         >
-        <v-col cols="4">
+        <v-col cols="12" md="4" sm="12" lg="4" xs="12">
             <v-card
             elevation="10"
             style="height: 80vh;"
@@ -51,7 +51,7 @@
                 </v-card>
 
             </v-col>
-            <v-col cols="8">
+            <v-col cols="12" md="8" sm="12" lg="8" xs="12">
                 <v-card
                 style="height: 80vh;"
                 elevation="10"

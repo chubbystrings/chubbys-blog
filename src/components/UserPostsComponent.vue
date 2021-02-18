@@ -57,8 +57,11 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4">
                                     <v-select
-                                    v-model="editedItem.category"
-                                    label="role" :items="categories"></v-select>
+                                      v-model="editedItem.category"
+                                      label="category"
+                                      :items="categories"
+                                    >
+                                    </v-select>
                                 </v-col>
                                 <v-col cols="12" >
                                     <v-textarea
@@ -74,7 +77,7 @@
                             <v-btn
                             :disabled="!editedItem.title ||
                             !editedItem.category || !editedItem.content ||
-                             editedItem.content.lengt > 2900
+                             editedItem.content.length > 6000
                             || editedItem.title.length > 25 "
                                  color="blue darken-1"
                                  text @click="save">Save</v-btn>
@@ -186,8 +189,7 @@ export default {
       this.posts.push({
         id: doc.id,
         title: doc.data().title.toUpperCase(),
-        content: doc.data().content.length > 200 ? doc.data().content.substring(0, 200).concat('...')
-          : doc.data().content,
+        content: this.trimContent(doc.data().content),
         category: doc.data().category,
         createdon: this.formatDate(doc.data().createdOn.seconds),
       });
@@ -203,7 +205,6 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
     },
-
     pages() {
       return (
         this.commentsData.length > 10
@@ -225,13 +226,19 @@ export default {
     upperCase(value) {
       return value.toUpperCase();
     },
+    trimLength(val) {
+      if (val.length < 200) { return val; }
+      return `${val.substring(0, 100)}...`;
+    },
   },
 
   methods: {
 
-    editItem(item) {
+    async editItem(item) {
       this.editedIndex = this.posts.indexOf(item);
       this.editedItem = { ...item };
+      const postDoc = await postsCollection.doc(item.id).get();
+      this.editedItem.content = await postDoc.data().content;
       this.dialog = true;
     },
 
@@ -270,18 +277,26 @@ export default {
     },
 
     async save() {
-      console.log(this.editedItem.id);
+      const newItem = {
+        ...this.editedItem,
+      };
+      newItem.content = this.trimContent(newItem.content);
       if (this.editedIndex > -1) {
         await this.$store.dispatch('updatePost', this.editedItem);
-        Object.assign(this.posts[this.editedIndex], this.editedItem);
+        Object.assign(this.posts[this.editedIndex], newItem);
       } else {
-        this.posts.push(this.editedItem);
+        this.posts.push(newItem);
       }
       this.close();
     },
 
     deleteMany() {
-      console.log(this.selected);
+      //
+    },
+
+    trimContent(val) {
+      if (val.length < 200) { return val; }
+      return `${val.substring(0, 100)}...`;
     },
   },
 };

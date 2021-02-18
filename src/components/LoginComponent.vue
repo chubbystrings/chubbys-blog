@@ -126,7 +126,6 @@ export default {
                     });
                 })
                 .catch((error) => {
-                  console.log(error);
                   const alert = {
                     alert: true,
                     type: 'error',
@@ -137,7 +136,6 @@ export default {
                 });
             }
           }).catch((err) => {
-            console.log(err);
             const alert = {
               alert: true,
               type: 'error',
@@ -147,7 +145,6 @@ export default {
             this.$store.commit('SET_ALERT', alert);
           });
         }).catch((err) => {
-          console.log(err);
           const alert = {
             alert: true,
             type: 'error',

@@ -65,7 +65,6 @@ export default {
     },
 
     view(id) {
-      console.log(id);
       this.$router.replace({ name: 'Post', params: { id } });
     },
   },

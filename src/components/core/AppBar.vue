@@ -1,7 +1,7 @@
 <template>
   <div>
     <blog-bar v-if="!currentUser || checkRoutes" />
-    <admin-bar v-else />
+    <admin-bar  v-else />
   </div>
 </template>
 
@@ -11,7 +11,6 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'CoreAppBar',
-
   data: () => ({
     items: [
       {
@@ -33,9 +32,6 @@ export default {
     checkRoutes() {
       return this.$route.name === 'Home' || this.$route.name === 'Post';
     },
-  },
-
-  methods: {
   },
 
   components: {

@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
-import Settings from '../views/Settings.vue';
+import NotFound from '../views/NotFound.vue';
 import AddUser from '../views/AddUser.vue';
 import UserPosts from '../views/UserPosts.vue';
 import Users from '../views/Users.vue';
@@ -96,16 +96,12 @@ const router = new Router({
       },
     },
     {
-      path: '/settings',
-      name: 'Settings',
-      component: Settings,
+      path: '/:notFound(.*)',
+      name: 'NotFound',
+      component: NotFound,
       meta: {
         requiresAuth: true,
       },
-    },
-    {
-      path: '*',
-      redirect: '/',
     },
   ],
 });

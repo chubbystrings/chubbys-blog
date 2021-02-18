@@ -62,8 +62,11 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4">
                                     <v-select
-                                    v-model="editedItem.role"
-                                    label="role" :items="roles"></v-select>
+                                      v-model="editedItem.role"
+                                      label="role"
+                                      :items="roles"
+                                    >
+                                    </v-select>
                                 </v-col>
                                 </v-row>
                             </v-container>
@@ -253,7 +256,6 @@ export default {
   methods: {
 
     suspendBtn() {
-      console.log(this.users.indexOf(this.selected[0]));
       if (this.selected[0].isactive === true) {
         this.userToSuspend = 'Suspend';
       } else {
@@ -266,17 +268,14 @@ export default {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = { ...item };
       this.dialog = true;
-      console.log(this.editedItem);
     },
 
     deleteItem(item) {
-      console.log(item);
       this.suspendDialog = true;
       this.userToSuspend = item;
     },
 
     cancel() {
-      console.log(this.userToSuspend.id);
       this.suspendDialog = false;
     },
 
@@ -284,12 +283,10 @@ export default {
       this.userToSuspend = '';
       this.suspendDialog = false;
       if (this.selected[0].isactive === true) {
-        console.log('Yeeee');
         const userIndex = this.users.indexOf(this.selected[0]);
         this.users[userIndex].isactive = !this.users[userIndex].isactive;
         this.$store.dispatch('suspendUser', this.selected[0].id);
       } else {
-        console.log('Nahhhhhhh');
         const userIndex = this.users.indexOf(this.selected[0]);
         this.users[userIndex].isactive = !this.users[userIndex].isactive;
         this.$store.dispatch('reactivateUser', this.selected[0].id);
@@ -310,7 +307,6 @@ export default {
     },
 
     save() {
-      console.log(this.editedIndex);
       if (this.editedIndex > -1) {
         try {
           this.$store.dispatch('editUser', this.editedItem);

@@ -38,10 +38,16 @@ export default new Vuex.Store({
     getLoginForm(state) {
       return state.showLoginForm;
     },
+    getDrawer(state) {
+      return state.drawer;
+    },
+    isAuthenticated() {
+      return fb.auth.currentUser !== null;
+    },
   },
   mutations: {
     setDrawer: (state, payload) => (state.drawer = payload),
-    toggleDrawer: (state) => (state.drawer = !state.drawer),
+    TOGGLE_DRAWER: (state) => (state.drawer = !state.drawer),
     LOAD_ARTICLES(state, payload) {
       state.articles = payload;
     },
@@ -104,7 +110,14 @@ export default new Vuex.Store({
           commit('OVERLAY_OFF');
         })
         .catch((err) => {
-          console.log(err);
+          if (err.message && err.message === 'Network Error') {
+            const alert = {
+              alert: true,
+              type: 'error',
+              message: err.message,
+            };
+            commit('SET_ALERT', alert);
+          }
           commit('OVERLAY_OFF');
         });
     },
@@ -116,8 +129,13 @@ export default new Vuex.Store({
           commit('OVERLAY_OFF');
         })
         .catch((error) => {
-          console.log(error);
+          const alert = {
+            alert: true,
+            type: 'error',
+            message: error.message || 'An error occurred',
+          };
           commit('OVERLAY_OFF');
+          commit('SET_ALERT', alert);
         });
     },
 
@@ -136,8 +154,7 @@ export default new Vuex.Store({
         },
       };
       axios.post(url, userData, config)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           routes.push({ name: 'Users' });
           commit('OVERLAY_OFF');
           const alert = {
@@ -148,7 +165,6 @@ export default new Vuex.Store({
           commit('SET_ALERT', alert);
         })
         .catch((error) => {
-          console.log(error);
           commit('OVERLAY_OFF');
           const alert = {
             alert: true,
@@ -216,7 +232,6 @@ export default new Vuex.Store({
           commit('SET_ALERT', alert);
         })
         .catch((error) => {
-          console.log(error);
           commit('OVERLAY_OFF');
           const alert = {
             alert: true,
@@ -249,7 +264,6 @@ export default new Vuex.Store({
           commit('SET_ALERT', alert);
         })
         .catch((error) => {
-          console.log(error);
           commit('OVERLAY_OFF');
           const alert = {
             alert: true,
@@ -284,17 +298,32 @@ export default new Vuex.Store({
                   routes.push('/dashboard');
                 })
                 .catch((error) => {
-                  console.log(error);
+                  const alert = {
+                    alert: true,
+                    type: 'error',
+                    message: `An error occurred ${error}`,
+                  };
+                  commit('SET_ALERT', alert);
                   commit('OVERLAY_OFF');
                 });
             }
           }).catch((err) => {
-            console.log(err);
+            const alert = {
+              alert: true,
+              type: 'error',
+              message: `An error occurred ${err}`,
+            };
+            commit('SET_ALERT', alert);
             commit('OVERLAY_OFF');
           });
         })
         .catch((error) => {
-          console.log(error);
+          const alert = {
+            alert: true,
+            type: 'error',
+            message: `An error occurred ${error}`,
+          };
+          commit('SET_ALERT', alert);
           commit('OVERLAY_OFF');
         });
     },
@@ -318,12 +347,22 @@ export default new Vuex.Store({
               commit('OVERLAY_OFF');
             })
             .catch((error) => {
-              console.log(error);
+              const alert = {
+                alert: true,
+                type: 'error',
+                message: `An error occurred ${error}`,
+              };
+              commit('SET_ALERT', alert);
               commit('OVERLAY_OFF');
             });
         }
       }).catch((err) => {
-        console.log(err);
+        const alert = {
+          alert: true,
+          type: 'error',
+          message: `An error occurred ${err}`,
+        };
+        commit('SET_ALERT', alert);
         commit('OVERLAY_OFF');
       });
     },
@@ -341,7 +380,12 @@ export default new Vuex.Store({
           }, 3000);
         })
         .catch((error) => {
-          console.log(error);
+          const alert = {
+            alert: true,
+            type: 'error',
+            message: `An error occurred ${error}`,
+          };
+          commit('SET_ALERT', alert);
           commit('OVERLAY_OFF');
         });
     },
@@ -350,8 +394,7 @@ export default new Vuex.Store({
     createPost({ commit }, payload) {
       commit('OVERLAY_ON');
       Admin.createPost(payload)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           routes.push({ name: 'Posts' });
           commit('OVERLAY_OFF');
           const alert = {
@@ -362,7 +405,6 @@ export default new Vuex.Store({
           commit('SET_ALERT', alert);
         })
         .catch((error) => {
-          console.log(error);
           commit('OVERLAY_OFF');
           const alert = {
             type: 'error',
@@ -374,7 +416,6 @@ export default new Vuex.Store({
 
     // eslint-disable-next-line no-unused-vars
     updatePost({ commit, state }, postData) {
-      console.log(postData);
       commit('OVERLAY_ON');
       const config = {
         headers: {
