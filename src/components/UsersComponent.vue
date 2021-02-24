@@ -101,7 +101,7 @@
                         </v-row>
                     </v-toolbar>
                     </template>
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:[`item.actions`]="{ item }">
                     <v-icon
                         small
                         class="mr-2"
@@ -187,7 +187,7 @@ export default {
     };
   },
   async created() {
-    this.$store.commit('OVERLAY_ON');
+    this.$store.commit('OVERLAY_ON', null, { root: true });
     this.loading = true;
     const superuser = [];
     const docRef = await usersCollection.get();
@@ -285,11 +285,11 @@ export default {
       if (this.selected[0].isactive === true) {
         const userIndex = this.users.indexOf(this.selected[0]);
         this.users[userIndex].isactive = !this.users[userIndex].isactive;
-        this.$store.dispatch('suspendUser', this.selected[0].id);
+        this.$store.dispatch('users/suspendUser', this.selected[0].id);
       } else {
         const userIndex = this.users.indexOf(this.selected[0]);
         this.users[userIndex].isactive = !this.users[userIndex].isactive;
-        this.$store.dispatch('reactivateUser', this.selected[0].id);
+        this.$store.dispatch('users/reactivateUser', this.selected[0].id);
       }
     },
 
@@ -309,10 +309,16 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         try {
-          this.$store.dispatch('editUser', this.editedItem);
+          this.$store.dispatch('users/editUser', this.editedItem);
           Object.assign(this.users[this.editedIndex], this.editedItem);
         } catch (error) {
           this.users.push(this.editedItem);
+          const alert = {
+            alert: true,
+            type: 'error',
+            message: 'Opps an error occurred',
+          };
+          this.$store.commit('SET_ALERT', alert, { root: true });
         }
       } else {
         this.users.push(this.editedItem);

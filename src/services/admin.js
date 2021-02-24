@@ -15,6 +15,13 @@ export default {
     author_id: payload.userId,
     author: payload.userName,
   }),
+  addViews: (id) => fb.viewsCollection.doc(id).set({
+    viewed: 0,
+  }),
+  updateViews: (id, oldView) => fb.viewsCollection.doc(id).update({
+    viewed: Number(oldView + 1),
+  }),
+  deleteView: (id) => fb.viewsCollection.doc(id).delete(),
   find_user_by_id: async (id) => {
     const userRef = fb.usersCollection.doc(id);
     const userDoc = await userRef.get();

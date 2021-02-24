@@ -10,7 +10,7 @@
   leave-active-class="animated fadeOut"
   >
    <v-hover
-        v-slot:default="{ hover }"
+      v-slot:default="{ hover }"
     >
     <div
     @click="view(value.id)"
@@ -23,11 +23,14 @@
       style="height: 10rem;"
       prominent
     >
-    <small class="cat-position ml-2">{{value.category}}</small>
+    <small class="cat-position ml-2">{{value.category}}
+      <span class="ml-3">{{value.createdOn | formatDate}}</span>
+    </small>
     <base-subheading>{{ value.title}}</base-subheading>
       {{ value.content | trimLength}}
        <div class="absolutePosition">
-          <v-icon class="mr-2"> mdi-comment-outline</v-icon>
+          <!-- <v-icon class="mr-2"> mdi-comment-outline</v-icon> -->
+          <span class="mr-2">{{value.viewed}}</span>
          <v-icon> mdi-eye-outline</v-icon>
        </div>
     </v-alert>
@@ -72,8 +75,8 @@ export default {
   filters: {
     formatDate(date) {
       // eslint-disable-next-line no-underscore-dangle
-      const newDate = date._seconds * 1000;
-      return moment(newDate).format('MMMM Do YY, h:mm a');
+      const newDate = date.seconds * 1000;
+      return moment(newDate).format('D/MM/YY, h:mm a');
     },
     upperCase(value) {
       return value.toUpperCase();

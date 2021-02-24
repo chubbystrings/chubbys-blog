@@ -5,4 +5,5 @@ export default {
   getArticle: (id) => instance.get(`/articles/${id}`),
   deleteArticle: (config, id) => instance.delete(`articles/${id}`, config),
   updateArticle: (config, id, postData) => instance.patch(`articles/${id}`, postData, config),
+  deleteMany: (config, ids) => instance.delete(`/articles/deletemany/${ids}`, config),
 };

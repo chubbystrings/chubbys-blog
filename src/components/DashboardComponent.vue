@@ -28,7 +28,7 @@
                             </v-col>
                             <v-col cols="12">
                                 <v-select
-                                dense
+                                    dense
                                     v-model="select"
                                     :items="items"
                                     :error-messages="selectRules"
@@ -44,6 +44,7 @@
                     <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="primary"
+                    class="hidden-sm-and-down"
                     block
                     :disabled="$v.$anyError || !content || !title || !select"
                     @click="submit">Post Article</v-btn>
@@ -77,13 +78,20 @@
                         </v-col>
                       </v-row>
                     </v-container>
+                    <v-card-actions>
+                      <v-btn color="primary"
+                    class="hidden-md-and-up"
+                    small
+                    block
+                    :disabled="$v.$anyError || !content || !title || !select"
+                    @click="submit">Post Article</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
     </v-container>
 </template>
 <script>
-import { mapState } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import {
   required, maxLength,
@@ -106,7 +114,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['userProfile']),
+    userProfile() {
+      return this.$store.getters['users/getUserProfile'];
+    },
+
+    currentUser() {
+      return this.$store.getters['users/getCurrentUser'];
+    },
     contentRules() {
       const errors = [];
       if (!this.$v.content.$dirty) return errors;
@@ -130,14 +144,19 @@ export default {
   },
   methods: {
     submit() {
+      const userId = this.currentUser.uid;
+      const userName = this.userProfile.name;
       const postData = {
         title: this.title.toUpperCase(),
         content: this.content,
         category: this.select,
-        userId: this.$store.state.currentUser.uid,
-        userName: this.$store.state.userProfile.name,
+        userId,
+        userName,
       };
-      this.$store.dispatch('createPost', postData);
+      this.$store.dispatch('posts/createPost', postData)
+        .then(() => {
+          this.$router.push({ name: 'Posts' });
+        });
     },
   },
 };

@@ -94,64 +94,64 @@ export default {
 
   methods: {
     login() {
-      this.$store.commit('OVERLAY_ON');
+      this.$store.commit('OVERLAY_ON', null, { root: true });
       auth.signInWithEmailAndPassword(this.email, this.password)
         .then((user) => {
           usersCollection.doc(user.user.uid).get().then((res) => {
             if (res.data().isactive === false) {
-              this.$store.dispatch('clearData');
+              this.$store.dispatch('clearData', null, { root: true });
               const alert = {
                 alert: true,
                 type: 'error',
                 message: 'this account has been suspended',
               };
-              this.$store.commit('OVERLAY_OFF');
-              this.$store.commit('SET_ALERT', alert);
+              this.$store.commit('OVERLAY_OFF', null, { root: true });
+              this.$store.commit('SET_ALERT', alert, { root: true });
             } else {
-              this.$store.commit('SET_CURRENT_USER', user.user);
-              this.$store.commit('SET_USER_PROFILE', res.data());
               Admin.getToken()
                 .then((idToken) => {
-                  this.$store.commit('SET_USER_TOKEN', idToken);
                   Admin.find_user_by_id(user.user.uid)
                     .then((response) => {
                       this.$router.push({ name: 'Dashboard' });
+                      this.$store.commit('users/SET_CURRENT_USER', user.user);
+                      this.$store.commit('users/SET_USER_PROFILE', res.data());
+                      this.$store.commit('users/SET_USER_TOKEN', idToken);
                       const alert = {
                         alert: true,
                         type: 'success',
                         message: `Welcome ${response.name} you are signed in as ${response.role} `,
                       };
-                      this.$store.commit('OVERLAY_OFF');
-                      this.$store.commit('SET_ALERT', alert);
+                      this.$store.commit('OVERLAY_OFF', null, { root: true });
+                      this.$store.commit('SET_ALERT', alert, { root: true });
                     });
                 })
                 .catch((error) => {
                   const alert = {
                     alert: true,
                     type: 'error',
-                    message: error.code ? error.message : error,
+                    message: error.code ? 'Opps an error occurred' : 'Oops An error occured',
                   };
-                  this.$store.commit('OVERLAY_OFF');
-                  this.$store.commit('SET_ALERT', alert);
+                  this.$store.commit('OVERLAY_OFF', null, { root: true });
+                  this.$store.commit('SET_ALERT', alert, { root: true });
                 });
             }
           }).catch((err) => {
             const alert = {
               alert: true,
               type: 'error',
-              message: err.code ? err.message : err,
+              message: err.code ? 'Opps an error occurred' : 'Opps an error occurred',
             };
-            this.$store.commit('OVERLAY_OFF');
-            this.$store.commit('SET_ALERT', alert);
+            this.$store.commit('OVERLAY_OFF', { root: true });
+            this.$store.commit('SET_ALERT', alert, { root: true });
           });
         }).catch((err) => {
           const alert = {
             alert: true,
             type: 'error',
-            message: err.code ? err.message : 'User has been suspended!!',
+            message: err.code ? 'Opps an error occurred' : 'User has been suspended!!',
           };
-          this.$store.commit('OVERLAY_OFF');
-          this.$store.commit('SET_ALERT', alert);
+          this.$store.commit('OVERLAY_OFF', null, { root: true });
+          this.$store.commit('SET_ALERT', alert, { root: true });
         });
     },
     clear() {

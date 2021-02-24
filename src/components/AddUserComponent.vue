@@ -85,7 +85,6 @@ import { validationMixin } from 'vuelidate';
 import {
   required, minLength, maxLength, email,
 } from 'vuelidate/lib/validators';
-import { mapState } from 'vuex';
 
 export default {
   mixins: [validationMixin],
@@ -111,7 +110,9 @@ export default {
   }),
 
   computed: {
-    ...mapState(['userProfile']),
+    userProfile() {
+      return this.$store.getters['users/getUserProfile'];
+    },
     roleSelectErrors() {
       const errors = [];
       if (!this.$v.roleSelect.$dirty) return errors;
@@ -164,7 +165,10 @@ export default {
         role: this.roleSelect,
       };
 
-      this.$store.dispatch('addUser', data);
+      this.$store.dispatch('users/addUser', data)
+        .then(() => {
+          this.$router.push({ name: 'Users' });
+        });
     },
     clear() {
       this.$v.$reset();

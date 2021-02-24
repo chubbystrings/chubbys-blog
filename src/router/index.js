@@ -65,7 +65,7 @@ const router = new Router({
         requiresAuth: true,
       },
       beforeEnter(to, from, next) {
-        if (store.state.userProfile.role === 'superuser') {
+        if (store.getters['users/getUserProfile'].role === 'superuser') {
           next();
         } else {
           next({ name: 'Dashboard' });
@@ -80,7 +80,7 @@ const router = new Router({
         requiresAuth: true,
       },
       beforeEnter(to, from, next) {
-        if (store.state.userProfile.role === 'superuser') {
+        if (store.getters['users/getUserProfile'].role === 'superuser') {
           next();
         } else {
           next({ name: 'Dashboard' });
@@ -99,9 +99,6 @@ const router = new Router({
       path: '/:notFound(.*)',
       name: 'NotFound',
       component: NotFound,
-      meta: {
-        requiresAuth: true,
-      },
     },
   ],
 });

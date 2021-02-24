@@ -20,9 +20,12 @@ export default {
   name: 'App',
 
   computed: {
-    ...mapState(['currentUser', 'showLoginForm']),
+    ...mapState(['showLoginForm']),
     checkRoutes() {
       return this.$route.name === 'Home' || this.$route.name === 'Post';
+    },
+    currentUser() {
+      return this.$store.getters['users/getCurrentUser'];
     },
   },
 
@@ -34,11 +37,11 @@ export default {
     adminBar: () => import('@/components/adminAppbar'),
   },
 
-  created() {
+  async created() {
     fb.auth.onAuthStateChanged((user) => {
       if (user && !this.currentRoute) {
-        this.$store.commit('SET_CURRENT_USER', user);
-        this.$store.dispatch('fetchUserProfile');
+        this.$store.commit('users/SET_CURRENT_USER', user);
+        this.$store.dispatch('users/fetchUserProfile');
       }
     });
   },
@@ -55,4 +58,27 @@ export default {
 .v-pagination__item, .v-pagination__navigation {
   outline: none !important;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #B0BEC5;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #607D8B;;
+}
+
 </style>

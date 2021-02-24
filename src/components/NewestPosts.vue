@@ -36,7 +36,6 @@
 
 <script>
 // Utilities
-import { mapState } from 'vuex';
 import moment from 'moment';
 
 export default {
@@ -46,7 +45,9 @@ export default {
     articlesPage: [],
   }),
   computed: {
-    ...mapState(['articles']),
+    articles() {
+      return this.$store.getters['posts/getArticles'];
+    },
   },
 
   methods: {
@@ -60,7 +61,7 @@ export default {
   filters: {
     formatDate(date) {
       // eslint-disable-next-line no-underscore-dangle
-      const newDate = date._seconds * 1000;
+      const newDate = date.seconds * 1000;
       return moment(newDate).format('MMMM Do YY, h:mm a');
     },
   },

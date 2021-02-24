@@ -52,9 +52,6 @@
 
 <script>
 // Utilities
-import {
-  mapState,
-} from 'vuex';
 
 export default {
   name: 'Feed',
@@ -66,24 +63,30 @@ export default {
   data: () => ({
     layout: 2,
     page: 1,
+    numberPerPage: 8,
   }),
 
   computed: {
-    ...mapState(['articles', 'searchedArticles']),
+    articles() {
+      return this.$store.getters['posts/getArticles'];
+    },
+    searchedArticles() {
+      return this.$store.getters['posts/getSearchArticles'];
+    },
     pages() {
       return Math.ceil(
-        this.articles && this.articles.length > 0 ? this.articles.length / 12 : 1,
+        this.articles && this.articles.length > 0 ? this.articles.length / this.numberPerPage : 1,
       );
     },
     paginatedArticles() {
       if (this.searchedArticles) {
-        const start = (this.page - 1) * 12;
-        const stop = this.page * 12;
+        const start = (this.page - 1) * this.numberPerPage;
+        const stop = this.page * this.numberPerPage;
 
         return this.searchedArticles ? this.searchedArticles.slice(start, stop) : '';
       }
-      const start = (this.page - 1) * 12;
-      const stop = this.page * 12;
+      const start = (this.page - 1) * this.numberPerPage;
+      const stop = this.page * this.numberPerPage;
 
       return this.articles ? this.articles.slice(start, stop) : '';
     },

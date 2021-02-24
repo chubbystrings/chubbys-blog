@@ -28,9 +28,12 @@ export default {
     ],
   }),
   computed: {
-    ...mapState(['currentUser', 'showLoginForm']),
+    ...mapState(['showLoginForm']),
     checkRoutes() {
       return this.$route.name === 'Home' || this.$route.name === 'Post';
+    },
+    currentUser() {
+      return this.$store.getters['users/getCurrentUser'];
     },
   },
 

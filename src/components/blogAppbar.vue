@@ -14,22 +14,13 @@
           @click="$vuetify.goTo(0)"
         />
         </v-avatar>
-        <base-btn
-          class="ml-3"
-          color="primary"
-          @click="goBack"
-          v-if="postRoute"
-          style="position: fixed; right: 0.8rem; z-index: 10;"
-        >
-          <v-icon>mdi-arrow-left</v-icon>
-        </base-btn>
-         <v-btn
+        <v-btn
         v-if="isAuth"
-        text
+        icon
         small
         to="/cms/dashboard"
         >
-        admin
+        <v-icon color="primary">mdi-account-circle</v-icon>
         </v-btn>
         <v-spacer />
         <transition
@@ -52,8 +43,17 @@
           @input="search"
         />
         </transition>
+         <base-btn
+          class="ml-3"
+          color="primary"
+          @click="goBack"
+          v-if="postRoute"
+          style=""
+        >
+          <v-icon>mdi-arrow-left</v-icon>
+        </base-btn>
         <v-btn
-        v-if="loginRoute"
+        v-if="loginRoute && !homeRoute"
         text
         to="/"
         >
@@ -89,8 +89,13 @@ export default {
     ],
   }),
   computed: {
-    ...mapState(['currentUser', 'showLoginForm', 'articles']),
-
+    ...mapState(['showLoginForm']),
+    currentUser() {
+      return this.$store.getters['users/getCurrentUser'];
+    },
+    articles() {
+      return this.$store.getters.getArticles;
+    },
     postRoute() {
       return this.$route.name === 'Post';
     },
@@ -103,17 +108,17 @@ export default {
     },
 
     isAuth() {
-      return this.$store.getters.isAuthenticated && !this.$route.path.includes('cms');
+      return this.$store.getters['users/isAuthenticated'] && !this.$route.path.includes('cms');
     },
   },
 
   methods: {
     goBack() {
       this.$router.push({ name: 'Home' });
-      this.$store.commit('UNSET_ARTICLE');
+      this.$store.commit('posts/UNSET_ARTICLE');
     },
     search() {
-      this.$store.commit('SERACH_ARTICLES', this.searchWord);
+      this.$store.commit('posts/SEARCH_ARTICLES', this.searchWord);
     },
   },
 };

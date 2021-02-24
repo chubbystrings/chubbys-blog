@@ -54,6 +54,13 @@
         >
         logout
         </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+        text
+        to="/"
+        >
+        Go to blog
+        </v-btn>
       </v-row>
     </v-container>
   </v-app-bar>
@@ -61,7 +68,6 @@
 
 <script>
 // Utilities
-import { mapState } from 'vuex';
 
 export default {
   name: 'CoreAppBar',
@@ -82,12 +88,11 @@ export default {
     ],
   }),
   computed: {
-    ...mapState(['currentUser']),
 
     userRole() {
       let user = '';
-      if (this.$store.state.userProfile) {
-        user = this.$store.state.userProfile.role;
+      if (this.$store.getters['users/getUserProfile']) {
+        user = this.$store.getters['users/getUserProfile'].role;
       }
 
       return user === 'superuser';
@@ -95,19 +100,26 @@ export default {
     loginRoute() {
       return this.$route.name === 'Login';
     },
+
+    currentUser() {
+      return this.$store.getters['users/getCurrentUser'];
+    },
   },
 
   methods: {
     logout() {
-      this.$store.dispatch('logout');
+      this.$store.dispatch('users/logout')
+        .then(() => {
+          this.$router.push({ name: 'Login' });
+        });
     },
     bar() {
-      this.$store.commit('TOGGLE_DRAWER');
+      this.$store.commit('TOGGLE_DRAWER', null, { root: true });
     },
 
     outside() {
       if (this.$store.getters.getDrawer) {
-        this.$store.commit('TOGGLE_DRAWER');
+        this.$store.commit('TOGGLE_DRAWER', null, { root: true });
       }
     },
   },

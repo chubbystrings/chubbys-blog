@@ -26,8 +26,7 @@ const { currentUser } = auth;
 // firebase collections
 const usersCollection = db.collection('users');
 const postsCollection = db.collection('posts');
-const commentsCollection = db.collection('comments');
-const likesCollection = db.collection('likes');
+const viewsCollection = db.collection('views');
 
 export {
   db,
@@ -35,6 +34,5 @@ export {
   currentUser,
   usersCollection,
   postsCollection,
-  commentsCollection,
-  likesCollection,
+  viewsCollection,
 };

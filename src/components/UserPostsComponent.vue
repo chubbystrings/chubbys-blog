@@ -89,7 +89,9 @@
                             <v-card>
                               <v-card-title class="headline">Delete?</v-card-title>
                               <v-card-text>
-                                Are you sure you want to delete Post?</v-card-text>
+                                Are you sure you want to delete
+                                {{ deleteType === 'one' ? 'post' : 'all'}}?
+                              </v-card-text>
                               <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="green darken-1" text
@@ -102,7 +104,7 @@
                         </v-row>
                     </v-toolbar>
                     </template>
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:[`item.actions`]="{ item }">
                     <v-icon
                         small
                         class="mr-2"
@@ -140,11 +142,12 @@ export default {
     return {
       page: 1,
       pageCount: 0,
-      itemsPerPage: 10,
+      itemsPerPage: 7,
       posts: [],
       loading: false,
       deleteDialog: false,
       dialog: false,
+      deleteType: 'one',
       itemToDelete: {},
       singleSelect: false,
       selected: [],
@@ -182,23 +185,7 @@ export default {
     };
   },
   async created() {
-    this.loading = true;
-    this.$store.commit('OVERLAY_ON');
-    const docRef = await postsCollection.where('author_id', '==', this.$store.state.currentUser.uid).get();
-    docRef.forEach((doc) => {
-      this.posts.push({
-        id: doc.id,
-        title: doc.data().title.toUpperCase(),
-        content: this.trimContent(doc.data().content),
-        category: doc.data().category,
-        createdon: this.formatDate(doc.data().createdOn.seconds),
-      });
-    });
-
-    setTimeout(() => {
-      this.loading = false;
-      this.$store.commit('OVERLAY_OFF');
-    }, 3000);
+    this.loadData();
   },
 
   computed: {
@@ -207,8 +194,8 @@ export default {
     },
     pages() {
       return (
-        this.commentsData.length > 10
-          ? Math.ceil(this.commentsData.length / 5) : 1);
+        this.commentsData.length > 7
+          ? Math.ceil(this.commentsData.length / 7) : 1);
     },
   },
 
@@ -233,6 +220,25 @@ export default {
   },
 
   methods: {
+    async loadData() {
+      this.loading = true;
+      this.$store.commit('OVERLAY_ON', null, { root: true });
+      const user = this.$store.getters['users/getCurrentUser'];
+      const docRef = await postsCollection.where('author_id', '==', user.uid).get();
+      docRef.forEach((doc) => {
+        this.posts.push({
+          id: doc.id,
+          title: doc.data().title.toUpperCase(),
+          content: this.trimContent(doc.data().content),
+          category: doc.data().category,
+          createdon: this.formatDate(doc.data().createdOn.seconds),
+        });
+      });
+      setTimeout(() => {
+        this.loading = false;
+        this.$store.commit('OVERLAY_OFF', null, { root: true });
+      }, 3000);
+    },
 
     async editItem(item) {
       this.editedIndex = this.posts.indexOf(item);
@@ -243,6 +249,7 @@ export default {
     },
 
     deleteItem(item) {
+      this.deleteType = 'one';
       this.deleteDialog = true;
       this.itemToDelete = item;
     },
@@ -254,12 +261,34 @@ export default {
 
     async ok() {
       try {
-        await this.$store.dispatch('deletePost', this.itemToDelete.id);
-        const index = this.posts.indexOf(this.itemToDelete);
-        this.posts.splice(index, 1);
-        this.deleteDialog = false;
+        if (this.deleteType === 'one') {
+          await this.$store.dispatch('posts/deletePost', this.itemToDelete.id);
+          const index = this.posts.indexOf(this.itemToDelete);
+          this.posts.splice(index, 1);
+          this.deleteDialog = false;
+        }
+
+        if (this.deleteType === 'many') {
+          const ids = this.selected.map((select) => select.id).join(',');
+          let index = null;
+          this.$store.dispatch('posts/deleteManyPosts', ids)
+            .then(() => {
+              ids.split(',').forEach((id) => {
+                index = this.posts.findIndex((post) => post.id === id);
+                this.posts.splice(index, 1);
+                this.deleteDialog = false;
+              });
+            });
+        }
       } catch (error) {
         this.deleteDialog = false;
+        const alert = {
+          alert: true,
+          type: 'error',
+          message: error.code ? 'Opps an error occurred' : 'User has been suspended!!',
+        };
+        this.$store.commit('OVERLAY_OFF', null, { root: true });
+        this.$store.commit('SET_ALERT', alert, { root: true });
       }
     },
 
@@ -282,7 +311,7 @@ export default {
       };
       newItem.content = this.trimContent(newItem.content);
       if (this.editedIndex > -1) {
-        await this.$store.dispatch('updatePost', this.editedItem);
+        await this.$store.dispatch('posts/updatePost', this.editedItem);
         Object.assign(this.posts[this.editedIndex], newItem);
       } else {
         this.posts.push(newItem);
@@ -291,7 +320,8 @@ export default {
     },
 
     deleteMany() {
-      //
+      this.deleteType = 'many';
+      this.deleteDialog = true;
     },
 
     trimContent(val) {
